@@ -1,0 +1,7 @@
+{
+  "name": "gestion-absences-ism",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
