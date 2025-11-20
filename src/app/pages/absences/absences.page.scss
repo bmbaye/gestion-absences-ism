@@ -1,0 +1,92 @@
+/* Scroll uniquement pour la liste */
+.absences-list {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar stylisée pour Webkit (Chrome, Safari, Edge) */
+.absences-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+@media (min-width: 768px) {
+  .absences-list::-webkit-scrollbar {
+    width: 8px;
+  }
+}
+
+.absences-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+.absences-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.absences-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
+  background-clip: padding-box;
+}
+
+/* Style pour les inputs date */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+/* Meilleure visibilité du texte date sur mobile */
+input[type="date"] {
+  color-scheme: dark;
+}
+
+/* Amélioration du padding sur mobile */
+@media (max-width: 640px) {
+  .absence {
+    padding: 12px;
+  }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+.absence-details {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar stylisée pour Webkit (Chrome, Safari, Edge) */
+.absence-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+@media (min-width: 768px) {
+  .absence-details::-webkit-scrollbar {
+    width: 8px;
+  }
+}
+
+.absence-details::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+.absence-details::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.absence-details::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
+  background-clip: padding-box;
+}

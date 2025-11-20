@@ -1,0 +1,60 @@
+<div class="w-full bg-glass-gradient backdrop-blur-md
+            rounded-lg border border-white/30 shadow-xl p-4 transition-all 
+            dark:bg-gray-900/40 dark:border-gray-600
+            flex flex-col">
+
+    <!-- FILTRES -->
+    <div class="filter mb-4  bg-glass-gradient backdrop-blur-md
+            rounded-lg border border-white/30 shadow-xl p-4 transition-all 
+            dark:bg-gray-900/40 dark:border-gray-600 w-full min-h-[120px] md:min-h-[150px] p-4 flex flex-col gap-4 flex-shrink-0">
+
+        <div class="flex justify-between items-center">
+            <span class="flex gap-2 items-center text-white font-monda text-sm md:text-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+                </svg>
+                <span class="hidden sm:inline">Filtrer Absences</span>
+                <span class="sm:hidden">Filtres</span>
+            </span>
+
+            <span class="font-monda text-white text-xs md:text-sm cursor-pointer hover:underline" (click)="resetFiltres()">
+                Réinitialiser
+            </span>
+        </div>
+
+        <form class="w-full flex flex-col sm:flex-row gap-3" [formGroup]="formulaireFiltre">
+            <input type="text" placeholder="Classe" formControlName="classe" class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
+            
+            <input type="text" placeholder="Nom et prénom" formControlName="nomPrenom"
+                class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
+            
+            <input type="date" formControlName="date"
+                class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
+        </form>
+
+        <span class="font-monda text-white text-xs md:text-sm">{{ absences.length }} absences affichées</span>
+
+    </div>
+
+    <!-- LISTE DES ABSENCES -->
+     
+    <div class="absences-list overflow-y-auto w-full max-h-[450px] flex flex-col md:flex-col gap-4 transition-all duration-500">
+        @for (absence of absencesFiltres; track $index) {
+        <div class="animate-fadeIn"
+     (click)="detailAbsence(absence)"
+     class="w-full min-h-[80px] bg-white/20 hover:bg-white/40 
+            transition-all cursor-pointer rounded-md p-4 flex justify-between">
+
+            <div class="font-monda text-white text-sm md:text-lg flex items-center">
+                {{ absence.prenom }} {{ absence.nom }}
+            </div>
+
+            <div class="flex flex-col justify-center items-end">
+                <span class="text-white font-monda text-base md:text-lg font-bold">{{ absence.classe }}</span>
+                <span class="text-white font-monda text-xs md:text-sm">{{ absence.date }}</span>
+            </div>
+        </div>
+        }
+    </div>
+
+</div>

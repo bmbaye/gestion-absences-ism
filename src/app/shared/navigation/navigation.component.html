@@ -1,0 +1,125 @@
+<div class="w-full mt-2 mx-auto bg-primary/15 backdrop-blur-md
+            rounded-lg border border-primary/30 shadow-xl p-4 transition-all 
+            dark:bg-primary-900/40 dark:border-primary-600 h-[50px] md:h-[80px] lg:h-[100px]">
+
+  <div class="flex justify-between items-center h-full px-4">
+
+    <!-- Mobile Burger Button (gauche) -->
+    <div class="md:hidden">
+      <button (click)="toggleDrawer()" class="text-white hover:opacity-80 transition-opacity"
+        aria-label="Ouvrir le menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="hidden md:flex lg:w-[40%] md:w-[50%] justify-center items-center h-full">
+      <ul class="w-full flex justify-between items-center gap-2 md:gap-4">
+        @for (lien of liens; track $index) {
+        <li
+          class="font-monda text-xs md:text-sm lg:text-lg cursor-pointer text-white font-bold hover:opacity-80 transition-opacity">
+          {{lien.lien}}
+        </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center w-[100px] md:w-[180px] gap-2 justify-around">
+      <img src="assets/images/ism.png" class="w-[20px] h-[20px] md:w-[30px] md:h-[30px] lg:w-[40px] lg:h-[40px]"
+        alt="ISM Logo">
+      <span class="font-monda text-[10px] md:text-[14px] lg:text-[18px] font-bold text-white">ABSENTE'ISM</span>
+    </div>
+
+    <!-- User Menu (droite) -->
+    <div class="relative z-50 bg-[#26263D] md:w-[270px] w-[120px] bg-opacity-30 md:h-[70px] h-[40px] flex justify-between items-center px-2 md:px-4 lg:px-6 rounded-[10px]">
+      <div class="flex items-center gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition-opacity"
+        (click)="toggleUserMenu(); $event.stopPropagation()">
+        <div class="avatar">
+          <div class="w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full ring ring-white ring-offset-2">
+            <img [src]="user.avatar" [alt]="user.name" />
+          </div>
+        </div>
+
+        <span class="hidden md:block font-monda text-sm lg:text-base text-white font-bold">
+          {{user.name}}
+        </span>
+
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white transition-transform duration-200"
+          [class.rotate-180]="isUserMenuOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
+
+      <!-- Dropdown Menu -->
+      @if (isUserMenuOpen) {
+      <div
+        class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden"
+        (click)="$event.stopPropagation()">
+        <!-- Info utilisateur -->
+        <div class="px-4 py-3 border-b border-gray-200">
+          <p class="font-monda text-sm font-bold text-gray-800">{{user.name}}</p>
+          <p class="font-monda text-xs text-gray-500">{{user.email}}</p>
+        </div>
+
+        <div class="py-1">
+          <button (click)="logout()"
+            class="w-full text-left px-4 py-2 text-sm font-monda text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Se déconnecter
+          </button>
+        </div>
+      </div>
+      }
+      <button (click)="toggleTheme()" class="absolute cursor-pointer md:top-4 right-4 p-2 rounded-full bg-white/20 text-white hover:bg-white/40 transition-all">
+          <ion-icon name="moon"></ion-icon>
+        </button>
+    </div>
+
+
+    <!-- Overlay pour fermer le dropdown -->
+    @if (isUserMenuOpen) {
+    <div class="fixed inset-0 z-40" (click)="closeUserMenu()"></div>
+    }
+
+    <!-- Drawer mobile (inchangé) -->
+    @if (isDrawerOpen) {
+    <div class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" (click)="closeDrawer()"></div>
+    }
+
+    <div
+      [class]="'md:hidden bg-[#F0A611] bg-opacity-20 fixed top-0 left-0 h-full w-[280px] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ' + (isDrawerOpen ? 'translate-x-0' : '-translate-x-full')">
+      <div class="flex justify-between items-center p-4 border-b border-gray-200">
+        <h2 class="font-monda text-lg font-bold text-white">Menu</h2>
+        <button (click)="closeDrawer()" class="text-white hover:text-gray-800 transition-colors"
+          aria-label="Fermer le menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <nav class="p-4">
+        <ul class="space-y-4">
+          @for (lien of liens; track $index) {
+          <li
+            class="font-monda text-white cursor-pointer font-bold hover:text-blue-600 transition-colors py-2 border-b border-gray-100"
+            (click)="closeDrawer()">
+            {{lien.lien}}
+          </li>
+          }
+        </ul>
+      </nav>
+    </div>
+
+  </div>
+</div>

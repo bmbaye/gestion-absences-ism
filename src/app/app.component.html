@@ -1,33 +1,53 @@
-<ion-app>
-  <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
-      <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi&#64;ionicframework.com</ion-note>
+<ion-app class="flex flex-col min-h-screen">
 
-          @for (p of appPages; track p; let i = $index) {
-            <ion-menu-toggle auto-hide="false">
-              <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-                <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
-          }
-        </ion-list>
+  <!-- NAVIGATION -->
+  <app-navigation></app-navigation>
 
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
+  <!-- CONTENU PRINCIPAL -->
+  <ion-content class="flex-1 ion-padding pt-0 min-h-0 flex flex-col items-center">
 
-          @for (label of labels; track label) {
-            <ion-item lines="none">
-              <ion-icon aria-hidden="true" slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-              <ion-label>{{ label }}</ion-label>
-            </ion-item>
-          }
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-    <ion-router-outlet id="main-content"></ion-router-outlet>
-  </ion-split-pane>
+    <div class="mx-auto w-[98%] mt-4 mb-4 flex flex-col md:flex-row gap-4 bg-white/10 rounded-lg p-4">
+
+      <!-- SIDEBAR -->
+      <div class="w-full md:w-[18%] bg-primary/15 backdrop-blur-md
+            rounded-lg border border-primary/30 shadow-xl p-4 transition-all 
+            dark:bg-primary-900/40 dark:border-primary-600 flex flex-col gap-6">
+
+        <div class="flex flex-col gap-1">
+          <span class="font-bold font-monda text-[18px] md:text-[24px]">Ecole</span>
+          <span class="font-monda text-[14px] md:text-[18px]">Ecole d'ingénieurs</span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="font-bold font-monda text-[18px] md:text-[24px]">Cours</span>
+          <span class="font-monda text-[14px] md:text-[18px]">
+            <p>Nombre du jour : 54</p>
+            <p>En cours : 12</p>
+            <p>Annulés : 3</p>
+          </span>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <span class="font-bold font-monda text-[18px] md:text-[24px]">Assiduité</span>
+          <span class="font-monda text-[14px] md:text-[18px]">
+            <p>Taux d'absences : 15%</p>
+            <p>Taux de présence : 85%</p>
+          </span>
+        </div>
+
+      </div>
+
+      <!-- CONTENU ABSENCES -->
+      <app-absences class="w-full md:w-[82%]"></app-absences>
+
+    </div>
+
+  </ion-content>
+
+  <!-- FOOTER -->
+  <app-footer
+    class="w-full mt-auto bg-glace-gradient backdrop-blur-md rounded-lg border border-primary/30 shadow-xl p-4 h-[50px] md:h-[80px] lg:h-[100px] dark:bg-primary-900/40 dark:border-primary-600">
+    <!-- Contenu du footer ici -->
+  </app-footer>
+
 </ion-app>
