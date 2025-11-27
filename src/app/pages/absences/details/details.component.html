@@ -26,7 +26,7 @@
             </div>
 
             <div class="flex justify-between text-white font-monda">
-                <span class="font-bold">Date de naissance :</span> <span>{{ oneAbsence.naissances }}</span>
+                <span class="font-bold">Date de naissance :</span> <span>{{ oneAbsence.dateNaissance }}</span>
             </div>
 
             <div class="flex justify-between text-white font-monda">
@@ -49,7 +49,7 @@
             </div>
 
             <div class="flex justify-between text-white font-monda">
-                <span class="font-bold">Date :</span> <span>{{ oneAbsence.date }}</span>
+                <span class="font-bold">Date :</span> <span>{{ oneAbsence.dateAbsence }}</span>
             </div>
 
             <div class="flex justify-between text-white font-monda">
@@ -63,31 +63,34 @@
                 Justification
             </span>
 
-            <div class="flex justify-between text-white font-monda">
-                <span class="font-bold">Titre :</span> <span>{{ oneAbsence.classe }}</span>
-            </div>
+            @if (oneAbsence.justification) {
+                <div class="flex justify-between text-white font-monda">
+                    <span class="font-bold">Titre :</span> <span>{{ oneAbsence.justification.titre }}</span>
+                </div>
 
-            <div class="flex justify-between text-white font-monda">
-                <span class="font-bold">Motif :</span> <span>{{ oneAbsence.date }}</span>
-            </div>
+                <div class="flex justify-between text-white font-monda">
+                    <span class="font-bold">Motif :</span> <span>{{ oneAbsence.justification.motif }}</span>
+                </div>
 
-            <div class="flex justify-between text-white font-monda">
-                <span class="font-bold">Pièces jointes :</span>
-                <input type="text" placeholder="Voir les fichiers"
-                    class="w-[130px] h-[28px] text-white placeholder-white bg-white/20 border-2 border-white rounded-md cursor-pointer font-monda" />
-            </div>
-        </div>
-        <div class="process w-full flex justify-around mt-4">
-            <button class="px-4 py-2 rounded-lg bg-primary text-white font-monda
-         shadow-lg shadow-primary/20 hover:shadow-primary/40
-         hover:bg-primary/90 transition-all">Valider</button>
-            <button class="px-4 py-2 rounded-lg bg-second text-white font-monda
-         shadow-lg shadow-second/20 hover:shadow-second/40
-         hover:bg-second/90 transition-all">Invalider</button>
+                <div class="flex justify-between text-white font-monda">
+                    <span class="font-bold">Pièce jointe :</span>
+                    <div class="w-[130px] h-[28px] text-white bg-white/20 border-2 border-white rounded-md cursor-pointer font-monda flex items-center justify-center">
+                        Voir pièce jointe
+                    </div>
+                </div>
+                <div class="process w-full flex justify-around mt-4">
+                    <button class="px-4 py-2 rounded-lg bg-primary text-white font-monda shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:bg-primary/90 transition-all">Valider</button>
+                    <button class="px-4 py-2 rounded-lg bg-second text-white font-monda shadow-lg shadow-second/20 hover:shadow-second/40 hover:bg-second/90 transition-all">Invalider</button>
+                </div>
+            } @else {
+                <span class="text-white font-monda text-base mx-auto">
+                    Absence non justifiée
+                </span>
+            }
         </div>
 
         } @else {
-        <span class="text-white font-monda text-base">
+        <span class="text-white font-monda text-base mx-auto">
             Sélectionnez une absence pour voir les détails
         </span>
         }

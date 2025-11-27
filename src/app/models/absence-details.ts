@@ -1,13 +1,15 @@
+import { Justification } from "./justification";
+
 export interface AbsenceDetails {
+    idAbsence: string;
     nom: string;
     prenom: string;
-    naissances: string;
+    dateNaissance: string;
     matricule: string;
     classe: string;
-    date: string;
+    dateAbsence: string;
     cours: string;
+    etatAbsence: string;
     horaire: string;
-    justifiee: string;
-    titre: string;
-    motif: string;
+    justification: Justification | null;
 }

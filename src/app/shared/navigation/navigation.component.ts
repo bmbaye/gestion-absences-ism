@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { IonIcon } from "@ionic/angular/standalone";
 import { IonicModule } from "@ionic/angular";
 
@@ -7,7 +7,7 @@ import { IonicModule } from "@ionic/angular";
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
-  imports: [IonicModule],
+  imports: [IonicModule, RouterLink],
 })
 export class NavigationComponent  implements OnInit {
   isDrawerOpen = false;
@@ -15,7 +15,7 @@ export class NavigationComponent  implements OnInit {
   date = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   liens = [
     {
-      "url" : "",
+      "url" : "/absences",
       "lien" : "ABSENCES"
     },
     {

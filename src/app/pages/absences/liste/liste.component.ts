@@ -1,175 +1,161 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { AbsenceDetails } from 'src/app/models/absence-details';
 import { AbsencesService } from '../absences-service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from "@ionic/angular";
 import { FormBuilder, FormGroup, ɵInternalFormsSharedModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-liste',
   templateUrl: './liste.component.html',
   styleUrls: ['./liste.component.scss'],
-  imports: [IonicModule, ɵInternalFormsSharedModule, ReactiveFormsModule, NgFor],
+  imports: [IonicModule, ɵInternalFormsSharedModule, ReactiveFormsModule, NgIf],
 })
-export class ListeComponent  implements OnInit {
+export class ListeComponent implements OnInit, OnDestroy {
+  @ViewChild('absencesList') absencesList!: ElementRef;
 
-    oneAbsence : AbsenceDetails | null = null;
-    formulaireFiltre : FormGroup = this.fb.group({
+  oneAbsence: AbsenceDetails | null = null;
+  formulaireFiltre: FormGroup;
+  absences: AbsenceDetails[] = [];
+  absencesFiltres: AbsenceDetails[] = [];
+  ecoleId: String = '68e4e8f61fb2ee0515d6e78c';
+  niveau: String = 'L3';
+  page: number = 0;
+  size: number = 15; 
+  hasNext: boolean = true;
+  loading: boolean = false;
+  error: string | null = null;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private absenceService: AbsencesService, private fb: FormBuilder) {
+    this.formulaireFiltre = this.fb.group({
       classe: [''],
       nomPrenom: [''],
       date: ['']
-    });;
-    absences : AbsenceDetails[] = [];
-    absencesFiltres : AbsenceDetails[] = [];
-
-  constructor(private absenceService: AbsencesService, private fb: FormBuilder) { }
+    });
+  }
 
   ngOnInit() {
     this.loadAbsences();
 
-    this.formulaireFiltre.valueChanges.subscribe(() => {
-      console.log("Filtres modifiés :", this.formulaireFiltre.value);
-      this.appliquerFiltres();
-    });
+    this.formulaireFiltre.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.appliquerFiltres();
+      });
+  }
 
-    this.appliquerFiltres();
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadAbsences() {
-    this.absences = [
-      {
-        "nom" : "XXXXXX1",
-        "prenom" : "YYYYYY1",
-        "naissances" : "2000-10-10",
-        "matricule" : "MAT-0000-0000-0001",
-        "classe" : "L3GLRS",
-        "date" : "2024-01-01",
-        "cours": "java",
-        "horaire":  "08h- 10h",
-        "justifiee" : "OUI",
-        "titre" : "Maladie",
-        "motif" : "Grippehhshh hggsgg sggsgg ",
-      },
-      {
-        "nom" : "XXXXXX2",
-        "prenom" : "YYYYYY2",
-        "naissances" : "2001-02-20",
-        "matricule" : "MAT-0000-0000-0002",
-        "classe" : "L3GLRS",
-        "date" : "2024-02-02",
-        "cours": "java",
-        "horaire":  "08h- 10h",
-        "justifiee" : "NON",
-        "titre" : "Inconnu",
-        "motif" : "Absence non justifiée",
-      },
-      {
-        "nom" : "XXXXXX3",
-        "prenom" : "YYYYYY3",
-        "naissances" : "2002-03-15",
-        "matricule" : "MAT-0000-0000-0003",
-        "classe" : "L3GLRS",
-        "date" : "2024-03-03",
-        "cours": "java",
-        "horaire":  "08h- 10h",
-        "justifiee" : "OUI",
-        "titre" : "Rendez-vous familial",
-        "motif" : "Voyage imprévu pour des raisons familiales",
-      },
-      {
-        "nom" : "XXXXXX4",
-        "prenom" : "YYYYYY4",
-        "naissances" : "2002-03-15",
-        "matricule" : "MAT-0000-0000-0004",
-        "classe" : "L3GLRS",
-        "date" : "2024-03-03",
-        "cours": "java",
-        "horaire":  "08h- 10h",
-        "justifiee" : "OUI",
-        "titre" : "Rendez-vous familial",
-        "motif" : "Voyage imprévu pour des raisons familiales",
-      },
-      {
-        "nom" : "XXXXXX5",
-        "prenom" : "YYYYYY5",
-        "naissances" : "2002-03-15",
-        "matricule" : "MAT-0000-0000-0005",
-        "classe" : "L3GLRS",
-        "date" : "2024-03-03",
-        "cours": "java",
-        "horaire":  "08h- 10h",
-        "justifiee" : "OUI",
-        "titre" : "Rendez-vous familial",
-        "motif" : "Voyage imprévu pour des raisons familiales",
-      },
-    ];
+    if (this.loading || !this.hasNext) {
+      return;
+    }
 
+    this.loading = true;
+    this.error = null;
+
+    this.absenceService.getAbsences(this.ecoleId, this.niveau, this.page, this.size)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.absences = [...this.absences, ...response.result];
+          
+          this.hasNext = response.hasNext;
+          this.page += 1;
+          
+          this.appliquerFiltres();
+          
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'Erreur lors du chargement des absences.';
+          console.error('Erreur lors du chargement des absences :', err);
+          this.loading = false;
+        }
+      });
+  }
+
+  onScrollList(event: any): void {
+    const element = event.target;
+    const scrollPosition = element.scrollTop + element.clientHeight;
+    const scrollHeight = element.scrollHeight;
+
+    if (scrollPosition >= scrollHeight - 100) {
+      this.loadAbsences();
+    }
   }
 
   appliquerFiltres() {
     if (!this.formulaireFiltre) return;
+    
     const filtres = this.formulaireFiltre.value;
     let results = [...this.absences];
 
-    if (filtres.classe) {
+    if (filtres.classe && filtres.classe.trim()) {
       results = results.filter(absence =>
-        absence.classe.toLowerCase().includes(filtres.classe.toLowerCase())
+        absence.classe.toLowerCase().includes(filtres.classe.toLowerCase().trim())
       );
-
-      if(results.length === 1) {
-        filtres.nomPrenom = results[0].nom + ' ' + results[0].prenom;
-        filtres.date = results[0].date;
-        this.formulaireFiltre.patchValue({
-          nomPrenom: filtres.nomPrenom,
-          date: filtres.date
-        }, { emitEvent: false });
-      }
     }
 
-    if (filtres.nomPrenom) {
+    if (filtres.nomPrenom && filtres.nomPrenom.trim()) {
       results = results.filter(absence =>
-        (absence.nom + ' ' + absence.prenom).toLowerCase().includes(filtres.nomPrenom.toLowerCase())
+        (absence.nom + ' ' + absence.prenom).toLowerCase()
+          .includes(filtres.nomPrenom.toLowerCase().trim())
       );
-      if(results.length === 1) {
-        filtres.classe = results[0].classe + ' ' + results[0].prenom;
-        filtres.date = results[0].date;
-        this.formulaireFiltre.patchValue({
-          classe: filtres.classe,
-          date: filtres.date
-        }, { emitEvent: false });
-      }
     }
 
     if (filtres.date) {
       results = results.filter(absence =>
-        absence.date === filtres.date
-
+        absence.dateAbsence === filtres.date
       );
-      if(results.length === 1) {
-        filtres.nomPrenom = results[0].nom + ' ' + results[0].prenom;
-        filtres.classe = results[0].classe;
-        this.formulaireFiltre.patchValue({
-          nomPrenom: filtres.nomPrenom,
-          classe: filtres.classe
-        }, { emitEvent: false });
-      }
     }
+
     this.absencesFiltres = results;
+
+    if (results.length === 1) {
+      this.autoCompleterFiltre(results[0], filtres);
+    }
   }
 
-  resetFiltres():void {
+  private autoCompleterFiltre(absence: AbsenceDetails, filtres: any) {
+    const updates: any = {};
+
+    if (!filtres.classe) {
+      updates.classe = absence.classe;
+    }
+    if (!filtres.nomPrenom) {
+      updates.nomPrenom = `${absence.nom} ${absence.prenom}`;
+    }
+    if (!filtres.date) {
+      updates.date = absence.dateAbsence;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      this.formulaireFiltre.patchValue(updates, { emitEvent: false });
+    }
+  }
+
+  resetFiltres(): void {
     this.formulaireFiltre.reset({
-        classe: '',
-        nomPrenom: '',
-        date: ''
-      }
-    );
+      classe: '',
+      nomPrenom: '',
+      date: ''
+    });
     this.appliquerFiltres();
   }
 
-  detailAbsence(absence: AbsenceDetails) {
-      this.absenceService.setAbsence(absence);
-    }
+  get nombreAbsences(): number {
+    return this.absencesFiltres.length;
+  }
 
+  detailAbsence(absence: AbsenceDetails) {
+    this.absenceService.setAbsence(absence);
+  }
 }

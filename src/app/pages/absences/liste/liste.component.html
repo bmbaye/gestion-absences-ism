@@ -3,8 +3,7 @@
             dark:bg-gray-900/40 dark:border-gray-600
             flex flex-col">
 
-    <!-- FILTRES -->
-    <div class="filter mb-4  bg-glass-gradient backdrop-blur-md
+    <div class="filter mb-4 bg-glass-gradient backdrop-blur-md
             rounded-lg border border-white/30 shadow-xl p-4 transition-all 
             dark:bg-gray-900/40 dark:border-gray-600 w-full min-h-[120px] md:min-h-[150px] p-4 flex flex-col gap-4 flex-shrink-0">
 
@@ -22,8 +21,9 @@
             </span>
         </div>
 
-        <form class="w-full flex flex-col sm:flex-row gap-3" [formGroup]="formulaireFiltre">
-            <input type="text" placeholder="Classe" formControlName="classe" class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
+        <form class="w-full flex flex-col sm:flex-row gap-3 md:gap-10" [formGroup]="formulaireFiltre">
+            <input type="text" placeholder="Classe" formControlName="classe" 
+                class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
             
             <input type="text" placeholder="Nom et prénom" formControlName="nomPrenom"
                 class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
@@ -32,29 +32,49 @@
                 class="w-full sm:w-[30%] p-2 rounded-md border-2 border-white bg-white/20 text-white placeholder-white font-monda focus:border-yellow-400" />
         </form>
 
-        <span class="font-monda text-white text-xs md:text-sm">{{ absences.length }} absences affichées</span>
-
+        <span class="font-monda text-white text-xs md:text-sm">
+            {{nombreAbsences}} absences chargées
+        </span>
     </div>
 
-    <!-- LISTE DES ABSENCES -->
-     
-    <div class="absences-list overflow-y-auto w-full max-h-[450px] flex flex-col md:flex-col gap-4 transition-all duration-500">
-        @for (absence of absencesFiltres; track $index) {
-        <div class="animate-fadeIn"
-     (click)="detailAbsence(absence)"
-     class="w-full min-h-[80px] bg-white/20 hover:bg-white/40 
-            transition-all cursor-pointer rounded-md p-4 flex justify-between">
-
-            <div class="font-monda text-white text-sm md:text-lg flex items-center">
-                {{ absence.prenom }} {{ absence.nom }}
-            </div>
-
-            <div class="flex flex-col justify-center items-end">
-                <span class="text-white font-monda text-base md:text-lg font-bold">{{ absence.classe }}</span>
-                <span class="text-white font-monda text-xs md:text-sm">{{ absence.date }}</span>
-            </div>
+    <div #absencesList 
+         (scroll)="onScrollList($event)"
+         class="absences-list overflow-y-auto w-full max-h-[450px] flex flex-col gap-4 transition-all duration-500">
+        
+        <div *ngIf="error" class="error-message bg-red-500/20 text-white p-4 rounded-md">
+            {{ error }}
         </div>
-        }
-    </div>
 
+        @for (absence of absencesFiltres; track absence.idAbsence || $index) {
+            <div class="animate-fadeIn"
+                 (click)="detailAbsence(absence)"
+                 class="w-full min-h-[80px] bg-white/20 hover:bg-white/40 
+                        transition-all cursor-pointer rounded-md p-4 flex justify-between">
+
+                <div class="font-monda text-white text-sm md:text-lg flex items-center">
+                    {{ absence.prenom }} {{ absence.nom }}
+                </div>
+
+                <div class="flex flex-col justify-center items-end">
+                    <span class="text-white font-monda text-base md:text-lg font-bold">{{ absence.classe }}</span>
+                    <span class="text-white font-monda text-xs md:text-sm">{{ absence.dateAbsence }}</span>
+                </div>
+            </div>
+        }
+
+        <div *ngIf="loading" class="loader flex items-center justify-center gap-2 p-4 text-white">
+            <div class="spinner w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <span class="font-monda">Chargement...</span>
+        </div>
+
+        <div *ngIf="!hasNext && absences.length > 0 && !loading" 
+             class="end-message text-center p-4 text-white/70 font-monda">
+            Toutes les absences ont été chargées
+        </div>
+
+        <div *ngIf="absencesFiltres.length === 0 && !loading" 
+             class="empty-message text-center p-8 text-white/70 font-monda">
+            Aucune absence trouvée
+        </div>
+    </div>
 </div>

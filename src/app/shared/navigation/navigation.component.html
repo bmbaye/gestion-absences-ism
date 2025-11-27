@@ -20,10 +20,11 @@
     <nav class="hidden md:flex lg:w-[40%] md:w-[50%] justify-center items-center h-full">
       <ul class="w-full flex justify-between items-center gap-2 md:gap-4">
         @for (lien of liens; track $index) {
-        <li
-          class="font-monda text-xs md:text-sm lg:text-lg cursor-pointer text-white font-bold hover:opacity-80 transition-opacity">
-          {{lien.lien}}
-        </li>
+          <li class="font-monda text-xs md:text-sm lg:text-lg cursor-pointer text-white font-bold hover:opacity-80 transition-opacity">
+            <a [routerLink]="lien.url" routerLinkActive="text-primary">
+              {{ lien.lien }}
+            </a>
+          </li>
         }
       </ul>
     </nav>

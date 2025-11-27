@@ -11,10 +11,10 @@ export class DetailsComponent  implements OnInit {
     oneAbsence : AbsenceDetails | null = null;
   
 
-  constructor(private absencesService : AbsencesService) { }
+  constructor(private absenceService : AbsencesService) { }
 
   ngOnInit() {
-    this.absencesService.absenceSelected$.subscribe(absence => {
+    this.absenceService.absenceSelected$.subscribe(absence => {
       this.oneAbsence = absence;
     });
   }
