@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { IonIcon } from "@ionic/angular/standalone";
 import { IonicModule } from "@ionic/angular";
+import { AuthService, UserData } from 'src/app/pages/security/auth-service';
 
 @Component({
   selector: 'app-navigation',
@@ -37,9 +38,15 @@ export class NavigationComponent  implements OnInit {
     email: 'jean.dupont@example.com',
     avatar: 'https://i.pravatar.cc/150?img=12'
   };
-  constructor( private router : Router) { }
+  constructor( private router : Router, private authService: AuthService) { }
+
+  currentUser : UserData | null = null;
 
   ngOnInit() {
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
+
     const saved = localStorage.getItem("theme");
     if (saved) {
       document.documentElement.classList.add(saved);
@@ -70,7 +77,7 @@ export class NavigationComponent  implements OnInit {
 
   logout() {
     this.closeUserMenu();
-    console.log('Déconnexion...');
+    this.authService.logout();
   }
 
   toggleTheme() {

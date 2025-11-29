@@ -41,12 +41,12 @@
         (click)="toggleUserMenu(); $event.stopPropagation()">
         <div class="avatar">
           <div class="w-6 h-6 md:w-10 md:h-10 lg:w-12 lg:h-12 rounded-full ring ring-white ring-offset-2">
-            <img [src]="user.avatar" [alt]="user.name" />
+            <img [src]="user.avatar" [alt]="currentUser?.prenom" />
           </div>
         </div>
 
         <span class="hidden md:block font-monda text-sm lg:text-base text-white font-bold">
-          {{user.name}}
+          {{currentUser?.prenom}} {{currentUser?.nom}}
         </span>
 
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white transition-transform duration-200"
@@ -90,13 +90,7 @@
     <div class="fixed inset-0 z-40" (click)="closeUserMenu()"></div>
     }
 
-    <!-- Drawer mobile (inchangé) -->
-    @if (isDrawerOpen) {
-    <div class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" (click)="closeDrawer()"></div>
-    }
-
-    <div
-      [class]="'md:hidden bg-[#F0A611] bg-opacity-20 fixed top-0 left-0 h-full w-[280px] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ' + (isDrawerOpen ? 'translate-x-0' : '-translate-x-full')">
+    <div [class]="'md:hidden bg-[#F0A611] bg-opacity-100 fixed top-0 left-0 h-full w-[280px] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ' + (isDrawerOpen ? 'translate-x-0' : '-translate-x-full')">
       <div class="flex justify-between items-center p-4 border-b border-gray-200">
         <h2 class="font-monda text-lg font-bold text-white">Menu</h2>
         <button (click)="closeDrawer()" class="text-white hover:text-gray-800 transition-colors"
@@ -109,7 +103,7 @@
         </button>
       </div>
 
-      <nav class="p-4">
+      <nav class="p-4 bg-[#F0A611] bg-opacity-100">
         <ul class="space-y-4">
           @for (lien of liens; track $index) {
           <li

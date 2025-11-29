@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'abesences',
-    pathMatch: 'full'
+    redirectTo: 'security',
+    pathMatch: 'full',
   },
   {
     path: 'absences',
-    loadChildren: () => import('./pages/absences/absences.module').then( m => m.AbsencesPageModule)
-  },
-  {
-    path: 'cours',
-    loadChildren: () => import('./pages/cours/cours.module').then( m => m.CoursPageModule)
+    loadChildren: () => import('./pages/absences/absences.module').then( m => m.AbsencesPageModule),
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ROLE_ATTACHE'] }
   },
   {
     path: 'security',

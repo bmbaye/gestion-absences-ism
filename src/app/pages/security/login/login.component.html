@@ -1,0 +1,32 @@
+<div class="w-full max-w-[600px] h-[300px] md:h-[500px] 
+            bg-glass-gradient backdrop-blur-md
+            rounded-lg border border-white/30 shadow-xl 
+            dark:bg-gray-900/40 dark:border-gray-600
+            flex flex-col justify-center p-4 transition-all mx-auto">
+
+  <form class="w-full flex flex-col gap-3 md:gap-6" [formGroup]="loginFormulaire">
+
+    <input type="text" placeholder="Username" formControlName="username"
+           class="w-full md:w-[500px] mx-auto p-2 rounded-md border-2 border-white 
+                  bg-white/20 text-white placeholder-white font-monda 
+                  focus:border-yellow-400 transition-all" />
+
+    <input type="password" placeholder="Password" formControlName="password"
+           class="w-full md:w-[500px] mx-auto p-2 rounded-md border-2 border-white 
+                  bg-white/20 text-white placeholder-white font-monda 
+                  focus:border-yellow-400 transition-all" />
+
+    <button class="w-full md:w-[500px] rounded-lg h-[45px]
+               shadow-xl 
+               bg-primary/15 backdrop-blur-md 
+               p-auto transition-all duration-300 
+               dark:bg-primary-900/40 dark:border-primary-600 
+               text-white font-monda
+               hover:bg-primary-500 hover:border-primary" (click)="onSubmit()">
+  Connexion
+</button>
+
+
+  </form>
+
+</div>

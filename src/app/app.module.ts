@@ -8,8 +8,12 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { NavigationComponent } from "./shared/navigation/navigation.component";
 import { AbsencesPage } from './pages/absences/absences.page';
+import { SecurityPage } from './pages/security/security.page';
 import { FooterComponent } from './shared/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,9 +23,20 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule, 
     NavigationComponent, 
     AbsencesPage, 
+    SecurityPage, 
     FooterComponent,
     HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { 
+      provide: RouteReuseStrategy, 
+      useClass: IonicRouteStrategy 
+    },
+    {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
